@@ -36,11 +36,34 @@ app.use(express.urlencoded({ extended: true }))
 
 // Database connection
 mongoose.connect(config.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
 })
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('MongoDB connection error:', err))
+.then(() => console.log('✅ Connected to MongoDB Atlas'))
+.catch(err => {
+  console.error('❌ MongoDB Atlas connection error:', err)
+  process.exit(1)
+})
+
+// MongoDB connection event handlers
+mongoose.connection.on('connected', () => {
+  console.log('📊 Mongoose connected to MongoDB Atlas')
+})
+
+mongoose.connection.on('error', (err) => {
+  console.error('📊 Mongoose connection error:', err)
+})
+
+mongoose.connection.on('disconnected', () => {
+  console.log('📊 Mongoose disconnected from MongoDB Atlas')
+})
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  await mongoose.connection.close()
+  console.log('📊 MongoDB Atlas connection closed through app termination')
+  process.exit(0)
+})
 
 // Routes
 app.use('/api/auth', authRoutes)
