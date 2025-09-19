@@ -8,7 +8,6 @@ import socketService from '../../services/socket'
 const RoleSelection = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [name, setNameInput] = useState('')
   const [selectedRole, setSelectedRole] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -20,12 +19,17 @@ const RoleSelection = () => {
       return
     }
 
+    if (selectedRole === 'student') {
+      // Redirect students to onboarding page
+      navigate('/student/onboarding')
+      return
+    }
+
+    // For teachers, proceed with login
     setLoading(true)
 
     try {
-      // For teachers, don't send name since it's fixed. For students, use provided name or default
-      const effectiveName = selectedRole === 'teacher' ? '' : (name.trim() || 'Student')
-      const { data } = await authAPI.login(effectiveName, selectedRole)
+      const { data } = await authAPI.login('', selectedRole) // Empty name for teacher
       const { user } = data
 
       // Save to Redux
@@ -41,18 +45,10 @@ const RoleSelection = () => {
         }
       })
 
-      // Navigate
-      navigate(user.role === 'teacher' ? '/teacher' : '/student')
+      // Navigate to teacher dashboard
+      navigate('/teacher')
     } catch (error) {
       console.error('Login error:', error)
-      
-      // Check if user is kicked out
-      if (error.response?.status === 403) {
-        // User is kicked out, redirect to kicked-out page
-        navigate('/kicked-out', { replace: true })
-        return
-      }
-      
       alert('Login failed. Please try again.')
     } finally {
       setLoading(false)
@@ -74,19 +70,6 @@ const RoleSelection = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="content-wrap">
-          {/* Name input - only show for students */}
-          {selectedRole === 'student' && (
-            <div className="name-row">
-              <input
-                type="text"
-                className="name-input"
-                placeholder="Enter your name (optional)"
-                value={name}
-                onChange={(e) => setNameInput(e.target.value)}
-              />
-            </div>
-          )}
-
           {/* Cards */}
           <div className="cards-grid">
             <button
@@ -193,28 +176,6 @@ const RoleSelection = () => {
           margin-top: 8px;
         }
 
-        /* optional input */
-        .name-row{
-          display:flex;
-          justify-content:center;
-          margin-bottom:18px;
-        }
-        .name-input{
-          width:420px;
-          max-width:90%;
-          padding:12px 16px;
-          border-radius:999px;
-          border:1px solid var(--border);
-          background:#fff;
-          outline:none;
-          font-size:14px;
-          box-shadow: 0 1px 2px rgba(16,24,40,0.03);
-          transition: box-shadow .15s ease, border-color .15s ease;
-        }
-        .name-input:focus{
-          box-shadow: 0 6px 18px rgba(92,72,214,0.12);
-          border-color: var(--purple-a);
-        }
 
         /* cards grid */
         .cards-grid{
@@ -312,7 +273,6 @@ const RoleSelection = () => {
         @media(max-width:420px){
           .brand-pill{ font-size:12px; padding:6px 10px; }
           .heading h1{ font-size:24px; }
-          .name-input{ width:100%; }
           .card{ padding:16px; }
           .continue-btn{ width:160px; }
         }

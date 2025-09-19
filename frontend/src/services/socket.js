@@ -46,29 +46,14 @@ class SocketService {
 
     this.socket.on('poll-updated', (data) => {
       console.log('Poll updated:', data)
-      // Dispatch to Redux store
-      store.dispatch({
-        type: 'polls/updateResults',
-        payload: { pollId: data.pollId, results: data.results }
-      })
     })
 
     this.socket.on('poll-status-updated', (data) => {
       console.log('Poll status updated:', data)
-      // Dispatch to Redux store
-      store.dispatch({
-        type: 'polls/updatePoll',
-        payload: { id: data.pollId, status: data.status, expiresAt: data.expiresAt }
-      })
     })
 
     this.socket.on('new-poll-available', (data) => {
       console.log('New poll available:', data)
-      // Dispatch to Redux store
-      store.dispatch({
-        type: 'polls/addPoll',
-        payload: data.poll
-      })
     })
 
     this.socket.on('error', (data) => {

@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Layout from './components/Shared/Layout'
 import RoleSelection from './components/Auth/RoleSelection'
+import StudentOnboarding from './components/Auth/StudentOnboarding'
 import KickedOut from './components/Auth/KickedOut'
 import TeacherDashboard from './components/Teacher/TeacherDashboard'
 import CreatePollForm from './components/Teacher/CreatePollForm'
@@ -113,6 +114,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<RoleSelection />} />
+        <Route path="/student/onboarding" element={<StudentOnboarding />} />
         <Route path="/kicked-out" element={<KickedOut />} />
         <Route
           path="/teacher"

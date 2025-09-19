@@ -52,6 +52,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { question, options, createdBy, timeLimit } = req.body
+    console.log('Creating poll with timeLimit:', timeLimit, 'type:', typeof timeLimit)
 
     if (!question || !options || !createdBy) {
       return res.status(400).json({ error: 'Question, options, and createdBy are required' })
@@ -72,7 +73,25 @@ router.post('/', async (req, res) => {
       question,
       options: options.map(option => ({ text: option, votes: 0 })),
       createdBy,
-      timeLimit: timeLimit || null
+      timeLimit: timeLimit || null,
+      // Set expiration if time limit is provided
+      expiresAt: timeLimit ? (() => {
+        const now = Date.now()
+        const expirationTime = new Date(now + parseInt(timeLimit) * 1000)
+        console.log('Setting expiration time:', expirationTime, 'from timeLimit:', timeLimit, 'now:', now)
+        
+        // If the expiration time is more than 24 hours from now, something is wrong
+        // Also check if the current time seems incorrect (system clock issues)
+        const timeDiff = expirationTime.getTime() - now
+        const currentYear = new Date(now).getFullYear()
+        
+        if (timeDiff > 24 * 60 * 60 * 1000 || currentYear > 2030) { // 24 hours in milliseconds or future year
+          console.log('Expiration time too far in future or system clock issue, not setting expiresAt. Current year:', currentYear)
+          return null
+        }
+        
+        return expirationTime
+      })() : null
     })
 
     await poll.save()
@@ -109,7 +128,21 @@ router.put('/:id/status', async (req, res) => {
     
     // Set expiration if time limit is set and poll is being activated
     if (status === 'active' && poll.timeLimit) {
-      poll.expiresAt = new Date(Date.now() + poll.timeLimit * 60 * 1000)
+      const now = Date.now()
+      const expirationTime = new Date(now + parseInt(poll.timeLimit) * 1000) // timeLimit is in seconds
+      
+      // If the expiration time is more than 24 hours from now, something is wrong
+      // Also check if the current time seems incorrect (system clock issues)
+      const timeDiff = expirationTime.getTime() - now
+      const currentYear = new Date(now).getFullYear()
+      
+      if (timeDiff > 24 * 60 * 60 * 1000 || currentYear > 2030) { // 24 hours in milliseconds or future year
+        console.log('Expiration time too far in future or system clock issue, not setting expiresAt. Current year:', currentYear)
+        poll.expiresAt = null
+      } else {
+        poll.expiresAt = expirationTime
+        console.log('Setting expiration time on status update:', poll.expiresAt, 'from timeLimit:', poll.timeLimit, 'now:', now)
+      }
     }
 
     await poll.save()

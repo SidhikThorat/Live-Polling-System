@@ -12,16 +12,22 @@ const pollSocket = (io, socket) => {
         return
       }
 
-      // Join the poll room
-      socket.join(`poll-${pollId}`)
-      
-      // Get current poll data
-      const poll = await Poll.findById(pollId).populate('createdBy', 'name role')
-      if (poll) {
-        socket.emit('poll-joined', { poll })
-      }
+      // Check if already in the room to prevent duplicate joins
+      const roomName = `poll-${pollId}`
+      if (!socket.rooms.has(roomName)) {
+        // Join the poll room
+        socket.join(roomName)
+        
+        // Get current poll data
+        const poll = await Poll.findById(pollId).populate('createdBy', 'name role')
+        if (poll) {
+          socket.emit('poll-joined', { poll })
+        }
 
-      console.log(`User ${userId} joined poll ${pollId}`)
+        console.log(`User ${userId} joined poll ${pollId}`)
+      } else {
+        console.log(`User ${userId} already in poll ${pollId}, skipping join`)
+      }
     } catch (error) {
       console.error('Join poll error:', error)
       socket.emit('error', { message: 'Failed to join poll' })
@@ -126,7 +132,21 @@ const pollSocket = (io, socket) => {
       
       // Set expiration if time limit is set and poll is being activated
       if (status === 'active' && poll.timeLimit) {
-        poll.expiresAt = new Date(Date.now() + poll.timeLimit * 60 * 1000)
+        const now = Date.now()
+        const expirationTime = new Date(now + poll.timeLimit * 1000) // timeLimit is in seconds
+        
+        // If the expiration time is more than 24 hours from now, something is wrong
+        // Also check if the current time seems incorrect (system clock issues)
+        const timeDiff = expirationTime.getTime() - now
+        const currentYear = new Date(now).getFullYear()
+        
+        if (timeDiff > 24 * 60 * 60 * 1000 || currentYear > 2030) { // 24 hours in milliseconds or future year
+          console.log('Socket: Expiration time too far in future or system clock issue, not setting expiresAt. Current year:', currentYear)
+          poll.expiresAt = null
+        } else {
+          poll.expiresAt = expirationTime
+          console.log('Socket: Setting expiration time:', poll.expiresAt, 'from timeLimit:', poll.timeLimit, 'now:', now)
+        }
       }
 
       await poll.save()

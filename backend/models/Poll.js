@@ -30,7 +30,7 @@ const pollSchema = new mongoose.Schema({
     default: 'draft'
   },
   timeLimit: {
-    type: Number, // in minutes
+    type: Number, // in seconds
     default: null
   },
   expiresAt: {

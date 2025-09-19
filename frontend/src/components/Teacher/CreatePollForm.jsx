@@ -97,10 +97,10 @@ const CreatePollForm = forwardRef(function CreatePollForm({ onCreated }, ref) {
                 onChange={(e) => setTimeLimit(e.target.value)}
                 aria-label="time-limit"
               >
-                <option value="60">60 seconds ▾</option>
-                <option value="120">2 minutes</option>
-                <option value="300">5 minutes</option>
-                <option value="600">10 minutes</option>
+                <option value="60">60 seconds</option>
+                <option value="120">2 minutes (120s)</option>
+                <option value="300">5 minutes (300s)</option>
+                <option value="600">10 minutes (600s)</option>
                 <option value="">No limit</option>
               </select>
             </div>

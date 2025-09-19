@@ -7,6 +7,7 @@ const Poll = require('../models/Poll')
 router.post('/', async (req, res) => {
   try {
     const { pollId, userId, optionIndex } = req.body
+    console.log('Vote submission request:', { pollId, userId, optionIndex })
 
     if (!pollId || !userId || optionIndex === undefined) {
       return res.status(400).json({ error: 'Poll ID, User ID, and option index are required' })
@@ -40,7 +41,15 @@ router.post('/', async (req, res) => {
       optionIndex
     })
 
-    await vote.save()
+    try {
+      await vote.save()
+    } catch (saveError) {
+      // Handle duplicate vote error
+      if (saveError.code === 11000) {
+        return res.status(400).json({ error: 'User has already voted on this poll' })
+      }
+      throw saveError
+    }
 
     // Update poll vote count
     poll.options[optionIndex].votes += 1
