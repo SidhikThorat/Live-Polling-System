@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { pollsAPI } from '../../services/api'
 import socketService from '../../services/socket'
+import ChatPopup from '../Shared/ChatPopup'
 
 const LivePollResults = () => {
   const { pollId } = useParams()
@@ -10,6 +11,7 @@ const LivePollResults = () => {
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [chatOpen, setChatOpen] = useState(false)
 
   const fetchPollAndResults = async () => {
     try {
@@ -61,15 +63,12 @@ const LivePollResults = () => {
   }
 
   const handleViewHistory = () => {
-    // Navigate to past results or show history modal
-    // For now, just show an alert
-    alert('Past results feature coming soon!')
+    // Navigate back to teacher dashboard with history view
+    navigate('/teacher?history=true')
   }
 
   const handleChat = () => {
-    // Open chat popup
-    // For now, just show an alert
-    alert('Chat feature coming soon!')
+    setChatOpen(true)
   }
 
   if (loading) {
@@ -180,6 +179,9 @@ const LivePollResults = () => {
           <path d="M21 15a2 2 0 0 1-2 2H8l-5 3V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" fill="#fff"/>
         </svg>
       </button>
+
+      {/* Chat Popup */}
+      <ChatPopup isOpen={chatOpen} onClose={() => setChatOpen(false)} />
 
       {/* Styles (scoped inline) */}
       <style>{`

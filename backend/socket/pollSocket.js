@@ -125,7 +125,14 @@ const pollSocket = (io, socket) => {
 
       await poll.save()
 
-      // Broadcast status change to all users in the poll room
+      // Broadcast status change to all users (not just poll room)
+      io.emit('poll-status-updated', {
+        pollId,
+        status,
+        expiresAt: poll.expiresAt
+      })
+      
+      // Also broadcast to poll room specifically
       io.to(`poll-${pollId}`).emit('poll-status-updated', {
         pollId,
         status,

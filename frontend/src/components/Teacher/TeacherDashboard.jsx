@@ -1,28 +1,61 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import CreatePollForm from './CreatePollForm'
+import PastResults from './PastResults'
 
 const TeacherDashboard = () => {
+  const [searchParams] = useSearchParams()
   const [refreshKey, setRefreshKey] = useState(0)
+  const [showHistory, setShowHistory] = useState(false)
   const onCreated = () => setRefreshKey((k) => k + 1)
+
+  // Check URL parameters to show history if requested
+  useEffect(() => {
+    if (searchParams.get('history') === 'true') {
+      setShowHistory(true)
+      // Clean up the URL parameter
+      const newUrl = new URL(window.location)
+      newUrl.searchParams.delete('history')
+      window.history.replaceState({}, '', newUrl.pathname + newUrl.search)
+    }
+  }, [searchParams])
   return (
     <div className="teacher-root">
       {/* top header */}
       <div className="header-row">
-        <div className="brand-pill">✦ Intervue Poll</div>
+        <div className="header-top">
+          <div className="brand-pill">✦ Intervue Poll</div>
+          
+          {/* View Poll History button - top right */}
+          <button 
+            className="history-btn" 
+            onClick={() => setShowHistory(!showHistory)}
+            aria-label="view poll history"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" style={{ marginRight: 8 }}>
+              <path fill="#fff" d="M12 5a7 7 0 1 0 7 7h-2a5 5 0 1 1-5-5V5z"/>
+            </svg>
+            View Poll History
+          </button>
+        </div>
 
         <div className="heading-area">
-          <h1 className="main-title">Let’s <span className="bold">Get Started</span></h1>
+          <h1 className="main-title">Let's <span className="bold">Get Started</span></h1>
           <p className="lead">
-            you’ll have the ability to create and manage polls, ask questions, and monitor your students' responses in real-time.
+            you'll have the ability to create and manage polls, ask questions, and monitor your students' responses in real-time.
           </p>
         </div>
       </div>
 
       {/* main content area */}
       <div className="main-grid single">
-        {/* Left large panel for CreatePollForm */}
+        {/* Left large panel for CreatePollForm or PastResults */}
         <section className="left-panel">
-          <CreatePollForm onCreated={onCreated} />
+          {showHistory ? (
+            <PastResults />
+          ) : (
+            <CreatePollForm onCreated={onCreated} />
+          )}
         </section>
       </div>
 
@@ -31,14 +64,16 @@ const TeacherDashboard = () => {
         className="ask-btn"
         type="button"
         onClick={() => {
-          // If CreatePollForm exposes a way to open a modal, you can connect it.
-          // Keeping behaviour-free here because original functionality is in child.
-          // Optionally scroll to the CreatePollForm area:
-          const el = document.querySelector('.left-panel')
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          if (showHistory) {
+            setShowHistory(false) // Switch back to create poll form
+          } else {
+            // Scroll to the CreatePollForm area
+            const el = document.querySelector('.left-panel')
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
         }}
       >
-        Ask Question
+        {showHistory ? 'Create New Poll' : 'Ask Question'}
       </button>
 
       {/* Styles scoped to component */}
@@ -73,6 +108,12 @@ const TeacherDashboard = () => {
           gap:18px;
         }
 
+        .header-top{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
         .brand-pill{
           display:inline-flex;
           align-items:center;
@@ -84,6 +125,30 @@ const TeacherDashboard = () => {
           font-size:13px;
           width: fit-content;
           font-weight:600;
+        }
+
+        .history-btn{
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: var(--gradient);
+          color: #fff;
+          border: none;
+          padding: 10px 18px;
+          border-radius: 999px;
+          font-weight: 600;
+          box-shadow: 0 8px 24px rgba(124,58,237,0.12);
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        .history-btn:hover{
+          transform: translateY(-1px);
+          box-shadow: 0 12px 30px rgba(124,58,237,0.16);
+        }
+
+        .history-btn svg {
+          opacity: 0.95;
         }
 
         .heading-area{

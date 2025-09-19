@@ -2,6 +2,7 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Shared/Layout'
 import RoleSelection from './components/Auth/RoleSelection'
+import TeacherDashboard from './components/Teacher/TeacherDashboard'
 import CreatePollForm from './components/Teacher/CreatePollForm'
 import LivePollResults from './components/Teacher/LivePollResults'
 import StudentDashboard from './components/Student/StudentDashboard'
@@ -16,7 +17,7 @@ function App() {
           path="/teacher"
           element={
             <ProtectedRoute role="teacher">
-              <CreatePollForm />
+              <TeacherDashboard />
             </ProtectedRoute>
           }
         />

@@ -57,8 +57,13 @@ export default function CreatePollForm({ onCreated }) {
 
       const { data } = await pollsAPI.create(payload)
       const poll = data.poll
+      
+      // Auto-activate the poll so students can see it
+      await pollsAPI.updateStatus(poll._id, 'active')
+      
       // notify via socket
       socketService.broadcastNewPoll(poll)
+      socketService.changePollStatus(poll._id, 'active')
 
       // Navigate to live results page
       navigate(`/teacher/poll/${poll._id}`)

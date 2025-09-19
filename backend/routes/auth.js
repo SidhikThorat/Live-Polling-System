@@ -15,9 +15,12 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Invalid role. Must be teacher or student' })
     }
 
-    // Create new user
-    const user = new User({ name, role })
-    await user.save()
+    // Find existing user or create new one
+    let user = await User.findOne({ name, role })
+    if (!user) {
+      user = new User({ name, role })
+      await user.save()
+    }
 
     res.json({
       success: true,
