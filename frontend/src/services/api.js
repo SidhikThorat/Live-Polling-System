@@ -1,0 +1,42 @@
+import axios from 'axios'
+
+const API_BASE_URL = 'http://localhost:5000/api'
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+// Auth API
+export const authAPI = {
+  login: (name, role) => api.post('/auth/login', { name, role }),
+  updateSocket: (userId, socketId) => api.put(`/auth/socket/${userId}`, { socketId }),
+  getUser: (userId) => api.get(`/auth/user/${userId}`),
+}
+
+// Polls API
+export const pollsAPI = {
+  getAll: () => api.get('/polls'),
+  getActive: () => api.get('/polls/active'),
+  getById: (id) => api.get(`/polls/${id}`),
+  create: (pollData) => api.post('/polls', pollData),
+  updateStatus: (id, status) => api.put(`/polls/${id}/status`, { status }),
+  getResults: (id) => api.get(`/polls/${id}/results`),
+}
+
+// Votes API
+export const votesAPI = {
+  submit: (voteData) => api.post('/votes', voteData),
+  getUserVote: (userId, pollId) => api.get(`/votes/user/${userId}/poll/${pollId}`),
+  getPollVotes: (pollId) => api.get(`/votes/poll/${pollId}`),
+}
+
+// Students API (good-to-have)
+export const studentsAPI = {
+  list: () => api.get('/students'),
+  remove: (id) => api.put(`/students/${id}/remove`),
+}
+
+export default api
