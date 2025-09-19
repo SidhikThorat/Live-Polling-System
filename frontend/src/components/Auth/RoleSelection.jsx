@@ -23,7 +23,8 @@ const RoleSelection = () => {
     setLoading(true)
 
     try {
-      const effectiveName = name.trim() || 'Guest'
+      // For teachers, don't send name since it's fixed. For students, use provided name or default
+      const effectiveName = selectedRole === 'teacher' ? '' : (name.trim() || 'Student')
       const { data } = await authAPI.login(effectiveName, selectedRole)
       const { user } = data
 
@@ -44,6 +45,14 @@ const RoleSelection = () => {
       navigate(user.role === 'teacher' ? '/teacher' : '/student')
     } catch (error) {
       console.error('Login error:', error)
+      
+      // Check if user is kicked out
+      if (error.response?.status === 403) {
+        // User is kicked out, redirect to kicked-out page
+        navigate('/kicked-out', { replace: true })
+        return
+      }
+      
       alert('Login failed. Please try again.')
     } finally {
       setLoading(false)
@@ -65,8 +74,18 @@ const RoleSelection = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="content-wrap">
-          {/* Optional name input - kept because component had name state */}
-          
+          {/* Name input - only show for students */}
+          {selectedRole === 'student' && (
+            <div className="name-row">
+              <input
+                type="text"
+                className="name-input"
+                placeholder="Enter your name (optional)"
+                value={name}
+                onChange={(e) => setNameInput(e.target.value)}
+              />
+            </div>
+          )}
 
           {/* Cards */}
           <div className="cards-grid">
@@ -75,8 +94,8 @@ const RoleSelection = () => {
               className={`card ${selectedRole === 'student' ? 'selected' : ''}`}
               onClick={() => setSelectedRole('student')}
             >
-              <div className="card-title">I’m a Student</div>
-              <div className="card-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry</div>
+              <div className="card-title">I'm a Student</div>
+              <div className="card-desc">Participate in polls, submit answers and view live results.</div>
             </button>
 
             <button
@@ -84,8 +103,8 @@ const RoleSelection = () => {
               className={`card ${selectedRole === 'teacher' ? 'selected' : ''}`}
               onClick={() => setSelectedRole('teacher')}
             >
-              <div className="card-title">I’m a Teacher</div>
-              <div className="card-desc">Submit answers and view live poll results in real-time.</div>
+              <div className="card-title">I'm a Teacher</div>
+              <div className="card-desc">Create and manage polls, monitor student responses in real-time.</div>
             </button>
           </div>
 

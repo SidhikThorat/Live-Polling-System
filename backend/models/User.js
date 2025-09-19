@@ -27,4 +27,10 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 })
 
+// Ensure only one teacher can exist in the system
+userSchema.index({ role: 1 }, { 
+  unique: true, 
+  partialFilterExpression: { role: 'teacher' } 
+})
+
 module.exports = mongoose.model('User', userSchema)

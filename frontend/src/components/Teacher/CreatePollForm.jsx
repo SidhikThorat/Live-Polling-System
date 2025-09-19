@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, forwardRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { pollsAPI } from '../../services/api'
@@ -6,7 +6,7 @@ import socketService from '../../services/socket'
 
 const CHAR_LIMIT = 100
 
-export default function CreatePollForm({ onCreated }) {
+const CreatePollForm = forwardRef(function CreatePollForm({ onCreated }, ref) {
   const { userId } = useSelector((s) => s.user || {})
   const navigate = useNavigate()
   const [question, setQuestion] = useState('')
@@ -39,12 +39,14 @@ export default function CreatePollForm({ onCreated }) {
   }
 
   const handleSubmit = async (e) => {
+    console.log('Form submission triggered', { e, question, options, userId })
     if (e && e.preventDefault) e.preventDefault()
     setError('')
     if (!question.trim()) return setError('Question is required')
     const cleaned = options.map((o) => o.trim()).filter(Boolean)
     if (cleaned.length < 2) return setError('At least 2 options are required')
 
+    console.log('Form validation passed, creating poll...')
     setLoading(true)
     try {
       const payload = {
@@ -76,21 +78,7 @@ export default function CreatePollForm({ onCreated }) {
   }
 
   return (
-    <div className="create-poll-page">
-      {/* Top-left brand pill */}
-      <div className="brand-pill">✦ Intervue Poll</div>
-
-      {/* Heading */}
-      <header className="hero">
-        <h1 className="title">
-          Let’s <span className="title-strong">Get Started</span>
-        </h1>
-        <p className="subtitle">
-          you’ll have the ability to create and manage polls, ask questions, and monitor your students' responses in
-          real-time.
-        </p>
-      </header>
-
+    <div className="create-poll-page" ref={ref}>
       {/* Form card */}
       <main className="form-wrap">
         <form id="create-poll-form" className="form-card" onSubmit={handleSubmit} aria-label="create-poll">
@@ -204,80 +192,36 @@ export default function CreatePollForm({ onCreated }) {
         </form>
       </main>
 
-      {/* Thin footer-like separator above the Ask button */}
-      <div className="footer-separator" aria-hidden="true" />
 
-      {/* Floating Ask button (bottom-right) */}
-      <button
-        className="ask-btn"
-        type="button"
-        onClick={handleSubmit}
-        disabled={loading}
-        aria-label="ask-question"
-      >
-        {loading ? 'Please wait…' : 'Ask Question'}
-      </button>
 
       {/* Styles — scoped to component */}
       <style>{`
         /* Container page */
         .create-poll-page {
-          min-height: 100vh;
-          background: #ffffff;
-          padding: 28px 56px;
-          box-sizing: border-box;
+          width: 100%;
           font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
           color: #111827;
-          position: relative;
         }
 
-        /* Brand pill (top-left) */
-        .brand-pill {
-          display:inline-flex;
-          gap:8px;
-          align-items:center;
-          padding:6px 12px;
-          border-radius:999px;
-          background: linear-gradient(135deg,#7C3AED 0%,#5BA0FF 100%);
-          color:#fff;
-          font-weight:600;
-          font-size:13px;
-          margin-left: 12px;
-        }
-
-        /* Heading */
-        .hero { margin-top: 18px; max-width: 1180px; }
-        .title {
-          margin: 12px 0 4px 12px;
-          font-size: 36px;
-          font-weight: 700;
-          line-height: 1.02;
-          color: #0f1724;
-        }
-        .title-strong { font-weight: 800; }
-        .subtitle {
-          margin: 0 0 22px 12px;
-          color: #6b7280;
-          font-size: 14px;
-          max-width: 920px;
-        }
-
-        /* Main form wrapper (centered width like screenshot) */
+        /* Main form wrapper */
         .form-wrap {
-          max-width: 1180px;
-          margin-top: 10px;
+          width: 100%;
         }
 
-        /* Form card (transparent background like screenshot — inner elements styled exactly) */
+        /* Form card */
         .form-card {
           width: 100%;
-          padding: 14px 0 26px 0;
+          padding: 20px;
           box-sizing: border-box;
+          background: #ffffff;
+          border-radius: 12px;
+          border: 1px solid #e8e9ef;
+          box-shadow: 0 6px 24px rgba(16,24,40,0.04);
         }
 
         .error {
           color: #9b2c2c;
-          margin: 0 12px 12px 12px;
+          margin: 0 0 12px 0;
           font-weight:600;
         }
 
@@ -286,7 +230,7 @@ export default function CreatePollForm({ onCreated }) {
           display:flex;
           align-items:center;
           justify-content:space-between;
-          margin: 12px;
+          margin: 0 0 12px 0;
         }
         .label-main {
           font-weight:700;
@@ -313,7 +257,7 @@ export default function CreatePollForm({ onCreated }) {
 
         /* editor area (big pale box) */
         .editor-wrap {
-          margin: 0 12px 6px 12px;
+          margin: 0 0 12px 0;
           position: relative;
         }
         .editor {
@@ -345,7 +289,7 @@ export default function CreatePollForm({ onCreated }) {
         .options-row {
           display: flex;
           gap: 48px;
-          margin: 18px 12px 8px 12px;
+          margin: 18px 0 8px 0;
           align-items: flex-start;
         }
         .options-left {
@@ -439,39 +383,6 @@ export default function CreatePollForm({ onCreated }) {
           background: radial-gradient(circle at center, #7C3AED 0 60%, #ffffff 61%);
         }
 
-        /* floating Ask Question (bottom-right) */
-        .ask-btn {
-          position: fixed;
-          right: 28px;
-          bottom: 18px;
-          height:44px;
-          min-width:160px;
-          padding: 0 22px;
-          border-radius:999px;
-          border: none;
-          color: #fff;
-          font-weight:700;
-          background: linear-gradient(90deg,#7C3AED 0%, #5BA0FF 100%);
-          box-shadow: 0 10px 30px rgba(124,58,237,0.12);
-          cursor: pointer;
-          z-index: 50;
-        }
-        .ask-btn:disabled { opacity:0.6; cursor:not-allowed; }
-
-        /* bottom border line like screenshot separation */
-        :root { --bottom-gap: 78px; }
-
-        /* footer-like thin separator above the floating button */
-        .footer-separator {
-          position: fixed;
-          left: 0;
-          right: 0;
-          bottom: 72px; /* just above the Ask button */
-          height: 1px;
-          background: #000;
-          opacity: 0.2;
-          z-index: 40;
-        }
         /* small responsive adjustments */
         @media (max-width: 980px) {
           .create-poll-page { padding: 18px; }
@@ -483,4 +394,6 @@ export default function CreatePollForm({ onCreated }) {
       `}</style>
     </div>
   )
-}
+})
+
+export default CreatePollForm

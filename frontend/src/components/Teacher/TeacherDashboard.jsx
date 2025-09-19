@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import React, { useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import CreatePollForm from './CreatePollForm'
-import PastResults from './PastResults'
+import { logout } from '../../store/userSlice'
+import socketService from '../../services/socket'
 
 const TeacherDashboard = () => {
-  const [searchParams] = useSearchParams()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [refreshKey, setRefreshKey] = useState(0)
-  const [showHistory, setShowHistory] = useState(false)
+  const createPollFormRef = useRef(null)
   const onCreated = () => setRefreshKey((k) => k + 1)
 
-  // Check URL parameters to show history if requested
-  useEffect(() => {
-    if (searchParams.get('history') === 'true') {
-      setShowHistory(true)
-      // Clean up the URL parameter
-      const newUrl = new URL(window.location)
-      newUrl.searchParams.delete('history')
-      window.history.replaceState({}, '', newUrl.pathname + newUrl.search)
-    }
-  }, [searchParams])
+  const handleLogout = () => {
+    dispatch(logout())
+    socketService.disconnect()
+    navigate('/', { replace: true })
+  }
+
   return (
     <div className="teacher-root">
       {/* top header */}
@@ -26,54 +25,74 @@ const TeacherDashboard = () => {
         <div className="header-top">
           <div className="brand-pill">✦ Intervue Poll</div>
           
-          {/* View Poll History button - top right */}
-          <button 
-            className="history-btn" 
-            onClick={() => setShowHistory(!showHistory)}
-            aria-label="view poll history"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" style={{ marginRight: 8 }}>
-              <path fill="#fff" d="M12 5a7 7 0 1 0 7 7h-2a5 5 0 1 1-5-5V5z"/>
-            </svg>
-            View Poll History
-          </button>
+          {/* Header buttons - top right */}
+          <div className="header-buttons">
+            <button 
+              className="history-btn" 
+              onClick={() => {
+                console.log('View Poll History clicked - navigating to /teacher/history')
+                // Navigate to dedicated history page
+                navigate('/teacher/history')
+              }}
+              aria-label="view poll history"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" style={{ marginRight: 8 }}>
+                <path fill="#fff" d="M12 5a7 7 0 1 0 7 7h-2a5 5 0 1 1-5-5V5z"/>
+              </svg>
+              View Poll History
+            </button>
+            
+            <button 
+              className="logout-btn" 
+              onClick={handleLogout}
+              aria-label="logout"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" style={{ marginRight: 8 }}>
+                <path fill="#fff" d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+              </svg>
+              Logout
+            </button>
+          </div>
         </div>
 
         <div className="heading-area">
           <h1 className="main-title">Let's <span className="bold">Get Started</span></h1>
           <p className="lead">
-            you'll have the ability to create and manage polls, ask questions, and monitor your students' responses in real-time.
+            You are the system administrator. Create and manage polls, ask questions, and monitor your students' responses in real-time.
           </p>
         </div>
       </div>
 
-      {/* main content area */}
-      <div className="main-grid single">
-        {/* Left large panel for CreatePollForm or PastResults */}
-        <section className="left-panel">
-          {showHistory ? (
-            <PastResults />
-          ) : (
-            <CreatePollForm onCreated={onCreated} />
-          )}
-        </section>
-      </div>
+          {/* main content area */}
+          <div className="main-grid single">
+            {/* Left large panel for CreatePollForm */}
+            <section className="left-panel">
+              <CreatePollForm onCreated={onCreated} ref={createPollFormRef} />
+            </section>
+          </div>
 
       {/* floating CTA bottom-right (matches screenshot style) */}
       <button
         className="ask-btn"
         type="button"
         onClick={() => {
-          if (showHistory) {
-            setShowHistory(false) // Switch back to create poll form
+          console.log('Ask Question button clicked', { createPollFormRef: createPollFormRef.current })
+          // Trigger form submission if form exists
+          if (createPollFormRef.current) {
+            const form = createPollFormRef.current.querySelector('form')
+            console.log('Found form:', form)
+            if (form) {
+              console.log('Dispatching submit event...')
+              form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+            } else {
+              console.log('Form not found in createPollFormRef.current')
+            }
           } else {
-            // Scroll to the CreatePollForm area
-            const el = document.querySelector('.left-panel')
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            console.log('createPollFormRef.current is null')
           }
         }}
       >
-        {showHistory ? 'Create New Poll' : 'Ask Question'}
+        Ask Question
       </button>
 
       {/* Styles scoped to component */}
@@ -114,6 +133,12 @@ const TeacherDashboard = () => {
           align-items: center;
         }
 
+        .header-buttons{
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
         .brand-pill{
           display:inline-flex;
           align-items:center;
@@ -127,7 +152,7 @@ const TeacherDashboard = () => {
           font-weight:600;
         }
 
-        .history-btn{
+        .history-btn, .logout-btn{
           display: inline-flex;
           align-items: center;
           gap: 6px;
@@ -142,12 +167,20 @@ const TeacherDashboard = () => {
           font-size: 14px;
         }
 
-        .history-btn:hover{
+        .history-btn:hover, .logout-btn:hover{
           transform: translateY(-1px);
           box-shadow: 0 12px 30px rgba(124,58,237,0.16);
         }
 
-        .history-btn svg {
+        .logout-btn{
+          background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+          box-shadow: 0 8px 24px rgba(239,68,68,0.12);
+        }
+        .logout-btn:hover{
+          box-shadow: 0 12px 30px rgba(239,68,68,0.16);
+        }
+
+        .history-btn svg, .logout-btn svg {
           opacity: 0.95;
         }
 

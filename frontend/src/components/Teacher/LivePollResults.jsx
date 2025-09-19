@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { pollsAPI } from '../../services/api'
 import socketService from '../../services/socket'
-import ChatPopup from '../Shared/ChatPopup'
+import ChatWidget from '../Shared/ChatWidget'
 
 const LivePollResults = () => {
   const { pollId } = useParams()
@@ -11,7 +11,6 @@ const LivePollResults = () => {
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [chatOpen, setChatOpen] = useState(false)
 
   const fetchPollAndResults = async () => {
     try {
@@ -67,9 +66,6 @@ const LivePollResults = () => {
     navigate('/teacher?history=true')
   }
 
-  const handleChat = () => {
-    setChatOpen(true)
-  }
 
   if (loading) {
     return (
@@ -173,15 +169,8 @@ const LivePollResults = () => {
         </div>
       </div>
 
-      {/* chat bubble bottom-right */}
-      <button className="chat-btn" onClick={handleChat} aria-label="chat">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M21 15a2 2 0 0 1-2 2H8l-5 3V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" fill="#fff"/>
-        </svg>
-      </button>
-
-      {/* Chat Popup */}
-      <ChatPopup isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+      {/* Chat Widget */}
+      <ChatWidget />
 
       {/* Styles (scoped inline) */}
       <style>{`
@@ -359,23 +348,6 @@ const LivePollResults = () => {
           cursor:pointer;
         }
 
-        /* chat bubble bottom-right */
-        .chat-btn{
-          position: fixed;
-          right: 18px;
-          bottom: 18px;
-          width:46px;
-          height:46px;
-          border-radius:999px;
-          border:none;
-          background: linear-gradient(90deg,var(--purple-strong), var(--purple-2));
-          box-shadow: 0 10px 30px rgba(124,58,237,0.12);
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          cursor:pointer;
-        }
-        .chat-btn svg { display:block; }
 
         /* small screens */
         @media (max-width: 860px) {

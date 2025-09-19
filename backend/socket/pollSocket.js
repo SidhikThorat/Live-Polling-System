@@ -110,9 +110,15 @@ const pollSocket = (io, socket) => {
     try {
       const { pollId, status } = data
 
-      const poll = await Poll.findById(pollId)
+      const poll = await Poll.findById(pollId).populate('createdBy', 'name role')
       if (!poll) {
         socket.emit('error', { message: 'Poll not found' })
+        return
+      }
+
+      // Verify that only the single teacher can change poll status
+      if (!poll.createdBy || poll.createdBy.role !== 'teacher' || poll.createdBy.name !== 'Teacher') {
+        socket.emit('error', { message: 'Only the system teacher can update poll status' })
         return
       }
 
@@ -151,10 +157,14 @@ const pollSocket = (io, socket) => {
     try {
       const { poll } = data
 
-      // Broadcast new poll to all connected users
-      io.emit('new-poll-available', { poll })
-
-      console.log(`New poll created: ${poll.question}`)
+      // Verify that only polls from the single teacher are broadcasted
+      if (poll.createdBy && poll.createdBy.name === 'Teacher' && poll.createdBy.role === 'teacher') {
+        // Broadcast new poll to all connected users
+        io.emit('new-poll-available', { poll })
+        console.log(`New poll created: ${poll.question}`)
+      } else {
+        console.log('Poll creation broadcast blocked - not from system teacher')
+      }
     } catch (error) {
       console.error('Poll creation broadcast error:', error)
     }

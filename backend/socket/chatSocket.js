@@ -27,6 +27,10 @@ const chatSocket = (io, socket) => {
         timestamp: new Date()
       }
 
+      // Save message to database
+      const savedMessage = new Message(messageData)
+      await savedMessage.save()
+
       // Broadcast to all users in chat room
       io.to('chat-room').emit('new-message', messageData)
       console.log(`Message from ${name} (${role}): ${message}`)

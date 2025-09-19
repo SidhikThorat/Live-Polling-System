@@ -14,6 +14,17 @@ router.get('/', async (req, res) => {
   }
 })
 
+// Get all participants (students + teacher)
+router.get('/participants', async (req, res) => {
+  try {
+    const participants = await User.find({ isActive: true }).select('name role socketId')
+    res.json({ success: true, participants })
+  } catch (error) {
+    console.error('Get participants error:', error)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
 // Remove a student (good-to-have)
 router.put('/:id/remove', async (req, res) => {
   try {

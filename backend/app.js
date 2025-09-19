@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth')
 const pollRoutes = require('./routes/polls')
 const voteRoutes = require('./routes/votes')
 const studentRoutes = require('./routes/students')
+const chatRoutes = require('./routes/chat')
 
 // Import socket handlers
 const pollSocket = require('./socket/pollSocket')
@@ -70,6 +71,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/polls', pollRoutes)
 app.use('/api/votes', voteRoutes)
 app.use('/api/students', studentRoutes)
+app.use('/api/chat', chatRoutes)
 
 // Health check
 app.get('/api/health', (req, res) => {

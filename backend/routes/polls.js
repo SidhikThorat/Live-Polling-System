@@ -61,6 +61,13 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'At least 2 options are required' })
     }
 
+    // Verify that the creator is the single teacher
+    const User = require('../models/User')
+    const teacher = await User.findById(createdBy)
+    if (!teacher || teacher.role !== 'teacher' || teacher.name !== 'Teacher') {
+      return res.status(403).json({ error: 'Only the system teacher can create polls' })
+    }
+
     const poll = new Poll({
       question,
       options: options.map(option => ({ text: option, votes: 0 })),
@@ -88,9 +95,14 @@ router.put('/:id/status', async (req, res) => {
       return res.status(400).json({ error: 'Invalid status' })
     }
 
-    const poll = await Poll.findById(id)
+    const poll = await Poll.findById(id).populate('createdBy', 'name role')
     if (!poll) {
       return res.status(404).json({ error: 'Poll not found' })
+    }
+
+    // Verify that only the single teacher can update poll status
+    if (!poll.createdBy || poll.createdBy.role !== 'teacher' || poll.createdBy.name !== 'Teacher') {
+      return res.status(403).json({ error: 'Only the system teacher can update poll status' })
     }
 
     poll.status = status

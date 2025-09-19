@@ -7,19 +7,69 @@ router.post('/login', async (req, res) => {
   try {
     const { name, role } = req.body
 
-    if (!name || !role) {
-      return res.status(400).json({ error: 'Name and role are required' })
+    if (!role) {
+      return res.status(400).json({ error: 'Role is required' })
     }
 
     if (!['teacher', 'student'].includes(role)) {
       return res.status(400).json({ error: 'Invalid role. Must be teacher or student' })
     }
 
-    // Find existing user or create new one
-    let user = await User.findOne({ name, role })
-    if (!user) {
-      user = new User({ name, role })
-      await user.save()
+    let user
+
+    if (role === 'teacher') {
+      // For teachers, always use a single fixed teacher account
+      user = await User.findOne({ role: 'teacher' })
+      if (!user) {
+        // Create the single fixed teacher account if it doesn't exist
+        user = new User({ name: 'Teacher', role: 'teacher' })
+        await user.save()
+      } else {
+        // Update the existing teacher's name to 'Teacher' if it's different
+        if (user.name !== 'Teacher') {
+          user.name = 'Teacher'
+          await user.save()
+        }
+      }
+    } else {
+      // For students, use the provided name or generate a unique default name
+      let studentName = name?.trim()
+      
+      if (!studentName) {
+        // Generate unique student name like "Student 1", "Student 2", etc.
+        const existingStudents = await User.find({ role: 'student' }).sort({ name: 1 })
+        let studentNumber = 1
+        
+        // Find the next available student number
+        for (const student of existingStudents) {
+          const match = student.name.match(/^Student (\d+)$/)
+          if (match) {
+            const num = parseInt(match[1])
+            if (num >= studentNumber) {
+              studentNumber = num + 1
+            }
+          }
+        }
+        
+        // Double-check that the generated name doesn't already exist
+        studentName = `Student ${studentNumber}`
+        while (await User.findOne({ name: studentName, role: 'student' })) {
+          studentNumber++
+          studentName = `Student ${studentNumber}`
+        }
+      }
+      
+      user = await User.findOne({ name: studentName, role: 'student' })
+      
+      if (!user) {
+        user = new User({ name: studentName, role: 'student' })
+        await user.save()
+      } else if (!user.isActive) {
+        // Student is kicked out, deny login
+        return res.status(403).json({ 
+          error: 'You have been removed from the system. Please contact the teacher.' 
+        })
+      }
     }
 
     res.json({

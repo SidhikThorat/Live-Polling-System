@@ -37,6 +37,13 @@ export const votesAPI = {
 export const studentsAPI = {
   list: () => api.get('/students'),
   remove: (id) => api.put(`/students/${id}/remove`),
+  getParticipants: () => api.get('/students/participants'),
+}
+
+// Chat API
+export const chatAPI = {
+  getMessages: () => api.get('/chat'),
+  getRecentMessages: () => api.get('/chat/recent'),
 }
 
 export default api
