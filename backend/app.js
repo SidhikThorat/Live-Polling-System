@@ -22,14 +22,14 @@ const server = http.createServer(app)
 // Socket.io setup
 const io = socketIo(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://lps-frontend-xxxx.onrender.com"],
+    origin: ["http://localhost:3000", "https://live-polling-system-1-93yb.onrender.com"],
     methods: ["GET", "POST"]
   }
 })
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:3000", "https://lps-frontend-xxxx.onrender.com"],
+  origin: ["http://localhost:3000", "https://live-polling-system-1-93yb.onrender.com"],
   credentials: true
 }))
 app.use(express.json())
