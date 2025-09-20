@@ -13,7 +13,7 @@ class SocketService {
       return this.socket
     }
 
-    this.socket = io('http://localhost:5000', {
+    this.socket = io('https://live-polling-system-okl9.onrender.com', {
       transports: ['websocket'],
       autoConnect: true,
     })
