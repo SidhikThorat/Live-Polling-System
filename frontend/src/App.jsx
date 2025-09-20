@@ -144,7 +144,7 @@ function App() {
           path="/student"
           element={
             <ProtectedRoute role="student">
-              <Layout><StudentDashboard /></Layout>
+              <StudentDashboard />
             </ProtectedRoute>
           }
         />

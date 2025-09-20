@@ -59,7 +59,9 @@ const RoleSelection = () => {
     <div className="role-page-root">
       <div className="role-container">
         {/* Brand pill */}
-        <div className="brand-pill">✦ Intervue Poll</div>
+        <div className="brand-pill-container">
+          <div className="brand-pill">✦ Intervue Poll</div>
+        </div>
 
         {/* Heading */}
         <div className="heading">
@@ -78,7 +80,7 @@ const RoleSelection = () => {
               onClick={() => setSelectedRole('student')}
             >
               <div className="card-title">I'm a Student</div>
-              <div className="card-desc">Participate in polls, submit answers and view live results.</div>
+              <div className="card-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry</div>
             </button>
 
             <button
@@ -87,7 +89,7 @@ const RoleSelection = () => {
               onClick={() => setSelectedRole('teacher')}
             >
               <div className="card-title">I'm a Teacher</div>
-              <div className="card-desc">Create and manage polls, monitor student responses in real-time.</div>
+              <div className="card-desc">Submit answers and view live poll results in real-time.</div>
             </button>
           </div>
 
@@ -115,6 +117,7 @@ const RoleSelection = () => {
           --purple-a: #7c5cff;
           --blue-b: #5ba0ff;
           --gradient: linear-gradient(135deg, var(--purple-a), var(--blue-b));
+          --bubble-gradient: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
         }
 
         /* full page */
@@ -136,15 +139,21 @@ const RoleSelection = () => {
           box-sizing: border-box;
         }
 
+        /* brand pill container */
+        .brand-pill-container{
+          display: flex;
+          justify-content: center;
+          margin-bottom: 18px;
+        }
+        
         /* brand pill */
         .brand-pill{
           display:inline-flex;
           align-items:center;
           gap:8px;
-          margin: 0 auto 18px;
           padding:6px 14px;
           border-radius:999px;
-          background: var(--gradient);
+          background: var(--bubble-gradient);
           color: #fff;
           font-size:13px;
           font-weight:600;
@@ -259,7 +268,7 @@ const RoleSelection = () => {
           cursor:pointer;
           font-weight:700;
           color:#fff;
-          background: var(--gradient);
+          background: var(--bubble-gradient);
           box-shadow: 0 8px 22px rgba(92,72,214,0.12);
           transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
         }

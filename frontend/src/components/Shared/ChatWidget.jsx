@@ -30,7 +30,7 @@ const ChatWidget = () => {
           height: 46px;
           border-radius: 999px;
           border: none;
-          background: linear-gradient(90deg, #7C3AED, #5BA0FF);
+          background: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
           box-shadow: 0 10px 30px rgba(124,58,237,0.12);
           display: flex;
           align-items: center;

@@ -199,10 +199,11 @@ const ChatPopup = ({ isOpen, onClose }) => {
         }
 
         .chatbot-container {
-          width: 320px;
-          height: 400px;
+          width: 350px;
+          height: 450px;
           background: white;
-          border-radius: 12px;
+          border-radius: 8px;
+          border: 1px solid #4285F4;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
           display: flex;
           flex-direction: column;
@@ -210,12 +211,13 @@ const ChatPopup = ({ isOpen, onClose }) => {
         }
 
         .chatbot-header {
-          background: linear-gradient(90deg, #7C3AED, #5BA0FF);
-          color: white;
-          padding: 12px;
+          background: white;
+          color: #374151;
+          padding: 16px;
           display: flex;
           justify-content: space-between;
           align-items: center;
+          border-bottom: 1px solid #e5e7eb;
         }
 
         .chatbot-tabs {
@@ -226,37 +228,49 @@ const ChatPopup = ({ isOpen, onClose }) => {
         .tab-button {
           background: none;
           border: none;
-          color: rgba(255, 255, 255, 0.7);
-          padding: 6px 12px;
-          border-radius: 6px;
+          color: #6b7280;
+          padding: 8px 16px;
+          border-radius: 0;
           cursor: pointer;
-          font-size: 14px;
+          font-size: 16px;
           font-weight: 500;
           transition: all 0.2s;
+          position: relative;
         }
 
         .tab-button.active {
-          background: rgba(255, 255, 255, 0.2);
-          color: white;
+          color: #111827;
+          font-weight: 600;
+        }
+
+        .tab-button.active::after {
+          content: '';
+          position: absolute;
+          bottom: -16px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
         }
 
         .tab-button:hover {
-          background: rgba(255, 255, 255, 0.1);
+          color: #111827;
         }
 
         .close-button {
           background: none;
           border: none;
-          color: white;
-          font-size: 18px;
+          color: #6b7280;
+          font-size: 20px;
           cursor: pointer;
           padding: 4px;
           border-radius: 4px;
-          transition: background 0.2s;
+          transition: all 0.2s;
         }
 
         .close-button:hover {
-          background: rgba(255, 255, 255, 0.1);
+          background: #f3f4f6;
+          color: #111827;
         }
 
         .chatbot-content {
@@ -282,18 +296,18 @@ const ChatPopup = ({ isOpen, onClose }) => {
         }
 
         .own-message {
-          align-items: flex-start;
-        }
-
-        .other-message {
           align-items: flex-end;
         }
 
+        .other-message {
+          align-items: flex-start;
+        }
+
         .message-name {
-          font-size: 12px;
+          font-size: 14px;
           font-weight: 600;
-          color: #7C3AED;
-          margin-bottom: 2px;
+          color: #7c5cff;
+          margin-bottom: 4px;
         }
 
         .message-bubble {
@@ -304,14 +318,13 @@ const ChatPopup = ({ isOpen, onClose }) => {
         }
 
         .own-message .message-bubble {
-          background: linear-gradient(90deg, #7C3AED, #5BA0FF);
+          background: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
           color: white;
         }
 
         .other-message .message-bubble {
-          background: #f3f4f6;
-          color: #374151;
-          border: 1px solid #e5e7eb;
+          background: #374151;
+          color: white;
         }
 
         .message-text {
@@ -361,8 +374,16 @@ const ChatPopup = ({ isOpen, onClose }) => {
           flex: 1;
           display: flex;
           flex-direction: column;
-          padding: 12px;
+          padding: 16px;
           overflow-y: auto;
+        }
+
+        .participants-tab::before {
+          
+          font-size: 14px;
+          color: #6b7280;
+          font-weight: 500;
+          margin-bottom: 12px;
         }
 
         .loading-message, .no-participants {
@@ -377,25 +398,24 @@ const ChatPopup = ({ isOpen, onClose }) => {
         .participants-list {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 4px;
         }
 
         .participant-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 8px 12px;
-          background: #f8f9fa;
-          border-radius: 6px;
-          border: 1px solid #e5e7eb;
+          padding: 8px 0;
+          background: transparent;
+          border: none;
         }
 
         .participant-name {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
-          color: #374151;
+          font-size: 16px;
+          color: #111827;
           font-weight: 500;
         }
 

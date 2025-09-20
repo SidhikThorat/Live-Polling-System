@@ -249,36 +249,35 @@ const StudentDashboard = () => {
         <div className="brand-pill">✦ Intervue Poll</div>
         <div className="loading-container">
           <div className="loader"></div>
-          <h1 className="wait-message">Wait for teacher to ask questions...</h1>
+          <h1 className="wait-message">Wait for the teacher to ask questions..</h1>
         </div>
         <ChatWidget />
         <style>{`
           .student-dashboard {
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-            color: white;
+            color: #000;
+            position: relative;
           }
 
           .brand-pill {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
+            gap: 8px;
+            padding: 6px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
             color: white;
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 600;
             margin-bottom: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(15,23,42,0.04);
           }
 
           .loading-container {
@@ -288,10 +287,10 @@ const StudentDashboard = () => {
           }
 
           .loader {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #7C3AED;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #7c5cff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 30px;
@@ -303,10 +302,10 @@ const StudentDashboard = () => {
           }
 
           .wait-message {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 600;
             margin: 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            color: #111827;
           }
         `}</style>
       </div>
@@ -320,36 +319,35 @@ const StudentDashboard = () => {
         <div className="brand-pill">✦ Intervue Poll</div>
         <div className="loading-container">
           <div className="loader"></div>
-          <h1 className="wait-message">Wait for teacher to ask questions...</h1>
+          <h1 className="wait-message">Wait for the teacher to ask questions..</h1>
         </div>
         <ChatWidget />
         <style>{`
           .student-dashboard {
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-            color: white;
+            color: #000;
+            position: relative;
           }
 
           .brand-pill {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
+            gap: 8px;
+            padding: 6px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
             color: white;
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 600;
             margin-bottom: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(15,23,42,0.04);
           }
 
           .loading-container {
@@ -359,10 +357,10 @@ const StudentDashboard = () => {
           }
 
           .loader {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #7C3AED;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #7c5cff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 30px;
@@ -374,10 +372,10 @@ const StudentDashboard = () => {
           }
 
           .wait-message {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 600;
             margin: 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            color: #111827;
           }
         `}</style>
       </div>
@@ -387,21 +385,23 @@ const StudentDashboard = () => {
   // Show active poll with countdown timer
   return (
     <div className="student-dashboard">
-      <div className="brand-pill">✦ Intervue Poll</div>
-      
-      {/* Countdown Timer */}
-      <div className="countdown-container">
-        <div className="countdown-timer">
-          Time Remaining: {formatTime(timeLeft)}
+      {/* Top Section - Question Number and Timer */}
+      <div className="top-section">
+        <div className="question-number">Question 1</div>
+        <div className="timer">
+          <svg width="16" height="16" viewBox="0 0 24 24" style={{ marginRight: 8 }}>
+            <path fill="#ff0000" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/>
+          </svg>
+          {formatTime(timeLeft)}
         </div>
       </div>
 
-      {/* Poll Card - matches poll history styling */}
+      {/* Main Poll Container */}
       <div className="poll-container">
         <div className="poll-card">
           {/* Question header - dark strip */}
           <div className="poll-header">
-            <div className="question-text">"{currentPoll.question}"</div>
+            <div className="question-text">{currentPoll.question}</div>
           </div>
 
           {/* Options body */}
@@ -412,22 +412,14 @@ const StudentDashboard = () => {
                  {currentPoll.options && currentPoll.options.length > 0 ? currentPoll.options.map((option, optionIndex) => {
                   const percentage = calculatePercentage(option.votes, currentPoll.totalVotes || 0)
   return (
-                    <div className="option-row" key={optionIndex}>
-                      <div className="left">
-                        <div className="num">{optionIndex + 1}</div>
-                        <div className="opt-label">{option.text}</div>
-      </div>
-
-                      <div className="right">
-                        <div className="progress-wrap">
-                          <div className="progress-track">
-                            <div
-                              className="progress-fill"
-                              style={{ width: `${Math.max(0, Math.min(100, percentage))}%` }}
-                            />
-                          </div>
-                          <div className="percent">{percentage}%</div>
+                    <div className="option-row result-option" key={optionIndex}>
+                      <div className="option-background" style={{ width: `${Math.max(0, Math.min(100, percentage))}%` }}></div>
+                      <div className="option-content">
+                        <div className="left">
+                          <div className="num">{optionIndex + 1}</div>
+                          <div className="opt-label">{option.text}</div>
                         </div>
+                        <div className="percent">{percentage}%</div>
                       </div>
                     </div>
                    )
@@ -436,10 +428,6 @@ const StudentDashboard = () => {
                      <p>No options available for this poll.</p>
                    </div>
                  )}
-
-                 <div className="total-votes">
-                   Total votes: {currentPoll.totalVotes || 0}
-                 </div>
                </>
              ) : (
                // Show voting options
@@ -461,129 +449,144 @@ const StudentDashboard = () => {
                    </div>
                  )}
 
-                 <div className="vote-button-container">
-                  <button 
-                    className="vote-button"
-                    onClick={handleVote}
-                    disabled={selectedOption === null || timeLeft <= 0}
-                  >
-                    Submit Vote
-                  </button>
-                </div>
               </>
             )}
           </div>
         </div>
       </div>
 
+      {/* Submit Button - Outside and to the left */}
+      {!hasVoted && (
+        <div className="submit-button-container">
+          <button 
+            className="vote-button"
+            onClick={handleVote}
+            disabled={selectedOption === null || timeLeft <= 0}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+
+      {/* Wait Message - Outside the question box */}
+      {hasVoted && (
+        <div className="wait-message">
+          Wait for the teacher to ask a new question..
+        </div>
+      )}
+
       <ChatWidget />
 
-      {/* Styles matching poll history */}
+      {/* Styles matching the image exactly */}
       <style>{`
-        :root{
-          --page-white: #ffffff;
-          --muted: #6b7280;
-          --border-purple: rgba(124,58,237,0.15);
-          --purple-strong: #7C3AED;
-          --purple-2: #5BA0FF;
-          --dark-header-start: #3a3a3a;
-          --dark-header-end: #6f6f6f;
-          --card-shadow: rgba(16,24,40,0.04);
-          --track-bg: #f4f4f6;
-        }
-
         .student-dashboard {
           min-height: 100vh;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #ffffff;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           padding: 20px;
           font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-          color: white;
+          color: #111827;
           position: relative;
         }
 
-        .brand-pill {
-          display: inline-flex;
+        .top-section {
+          display: flex;
+          justify-content: flex-start;
           align-items: center;
-          gap: 10px;
-          padding: 12px 20px;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.2);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          color: white;
-          font-size: 16px;
-          font-weight: 600;
-          margin-bottom: 30px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          gap: 20px;
+          width: 100%;
+          max-width: 600px;
+          margin-bottom: 20px;
         }
 
-        .countdown-container {
-          margin-bottom: 24px;
-          text-align: center;
-        }
-
-        .countdown-timer {
-          background: rgba(255, 255, 255, 0.15);
-          backdrop-filter: blur(10px);
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          border-radius: 12px;
-          padding: 12px 24px;
-          color: white;
-          font-size: 1.2rem;
+        .question-number {
+          font-size: 20px;
           font-weight: 700;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          color: #111827;
+        }
+
+        .timer {
+          display: flex;
+          align-items: center;
+          font-size: 20px;
+          font-weight: 700;
+          color: #ff0000;
         }
 
         .poll-container {
-          max-width: 800px;
+          max-width: 600px;
           width: 100%;
         }
 
         .poll-card {
           width: 100%;
           border-radius: 8px;
-          border: 2px solid rgba(124,58,237,0.12);
+          border: 1px solid #4285F4;
           padding: 0;
-          box-shadow: 0 6px 24px var(--card-shadow);
-          background: transparent;
+          background: #ffffff;
         }
 
         .poll-header {
-          border-top-left-radius: 6px;
-          border-top-right-radius: 6px;
-          padding: 12px 16px;
-          background: linear-gradient(90deg, var(--dark-header-start), var(--dark-header-end));
-          color: #fff;
-          font-weight: 600;
-          font-size: 14px;
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+          padding: 12px 20px;
+          background: linear-gradient(90deg, #343a40 0%, #343a40 60%, rgba(52,58,64,0.3) 100%);
+          color: #ffffff;
+          font-weight: 500;
+          font-size: 16px;
         }
 
         .question-text { 
-          padding-left: 6px; 
+          padding-left: 0; 
         }
 
         .poll-body {
-          padding: 18px;
-          background: #fff;
-          border-bottom-left-radius: 6px;
-          border-bottom-right-radius: 6px;
+          padding: 20px;
+          background: #ffffff;
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
         }
 
         .option-row {
           display: flex;
           align-items: center;
-          justify-content: space-between;
           gap: 12px;
-          padding: 12px;
+          padding: 14px 20px;
           border-radius: 8px;
-          border: 1px solid rgba(124,58,237,0.06);
-          margin-bottom: 12px;
-          background: #fff;
+          margin-bottom: 8px;
+          background: #f0f0f0;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          position: relative;
+        }
+
+        .result-option {
+          background: #f0f0f0;
+          cursor: default;
+          overflow: hidden;
+        }
+
+        .option-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          background: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
+          border-radius: 8px;
+          transition: width 0.5s ease;
+          z-index: 1;
+        }
+
+        .option-content {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
         }
 
         .option-row:last-child { margin-bottom: 0; }
@@ -592,27 +595,72 @@ const StudentDashboard = () => {
           display: flex;
           align-items: center;
           gap: 12px;
-          min-width: 260px;
+          width: 100%;
         }
 
         .num {
-          width: 34px;
-          height: 34px;
+          width: 24px;
+          height: 24px;
           border-radius: 999px;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: var(--purple-strong);
-          color: #fff;
-          font-weight: 700;
-          box-shadow: 0 6px 14px rgba(124,58,237,0.12);
-          font-size: 14px;
+          background: #8b8b9f;
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 12px;
           flex-shrink: 0;
         }
 
         .opt-label {
-          font-size: 15px;
-          color: #0f1724;
+          font-size: 16px;
+          color: #343a40;
+          font-weight: 500;
+        }
+
+        .vote-option.selected {
+          background: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
+        }
+
+        .vote-option.selected .num {
+          background: #ffffff;
+          color: #7c5cff;
+        }
+
+        .vote-option.selected .opt-label {
+          color: #ffffff;
+        }
+
+        .submit-button-container {
+          margin-top: 20px;
+          text-align: right;
+          width: 100%;
+          max-width: 600px;
+        }
+
+        .vote-button {
+          width: 180px;
+          height: 44px;
+          border: none;
+          border-radius: 999px;
+          background: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
+          color: #ffffff;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 8px 22px rgba(92,72,214,0.12);
+        }
+
+        .vote-button:hover:not(:disabled) {
+          transform: translateY(-1px);
+          box-shadow: 0 12px 30px rgba(92,72,214,0.16);
+        }
+
+        .vote-button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
         }
 
         .right { 
@@ -632,7 +680,7 @@ const StudentDashboard = () => {
         .progress-track {
           flex: 1;
           height: 28px;
-          background: var(--track-bg);
+          background: #f4f4f6;
           border-radius: 6px;
           overflow: hidden;
           border: 1px solid rgba(124,58,237,0.08);
@@ -642,7 +690,7 @@ const StudentDashboard = () => {
 
         .progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, var(--purple-strong), var(--purple-2));
+          background: linear-gradient(90deg, #7c5cff 0%, #7c5cff 60%, #5767D0 100%);
           border-top-right-radius: 6px;
           border-bottom-right-radius: 6px;
           border-top-left-radius: 6px;
@@ -655,60 +703,22 @@ const StudentDashboard = () => {
           text-align: right;
           font-weight: 700;
           color: #0f1724;
+          font-size: 16px;
         }
 
-        .total-votes {
-          margin-top: 16px;
-          padding: 12px;
-          background-color: #f8f9fa;
-          border-radius: 8px;
-          text-align: center;
-          color: #6b7280;
-          font-size: 14px;
+        .result-option .percent {
+          color: #0f1724;
+          font-weight: 700;
         }
 
-        .vote-option {
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .vote-option:hover {
-          background: rgba(124,58,237,0.05);
-          border-color: rgba(124,58,237,0.2);
-        }
-
-        .vote-option.selected {
-          background: rgba(124,58,237,0.1);
-          border-color: var(--purple-strong);
-        }
-
-        .vote-button-container {
+        .wait-message {
           margin-top: 20px;
           text-align: center;
-        }
-
-        .vote-button {
-          background: linear-gradient(90deg, var(--purple-strong), var(--purple-2));
-          color: white;
-          border: none;
-          padding: 12px 32px;
-          border-radius: 8px;
+          color:rgb(0, 0, 0);
           font-size: 16px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          box-shadow: 0 4px 12px rgba(124,58,237,0.3);
-        }
-
-        .vote-button:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(124,58,237,0.4);
-        }
-
-        .vote-button:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-          transform: none;
+          font-weight: 500;
+          width: 100%;
+          max-width: 600px;
         }
 
         @media (max-width: 768px) {
