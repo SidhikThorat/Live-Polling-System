@@ -78,6 +78,22 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Live Polling System API is running' })
 })
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Live Polling System API', 
+    status: 'running',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      polls: '/api/polls',
+      votes: '/api/votes',
+      students: '/api/students',
+      chat: '/api/chat'
+    }
+  })
+})
+
 // Socket.io connection handling
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id)
