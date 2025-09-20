@@ -113,4 +113,4 @@ server.listen(PORT, () => {
   console.log(`Environment: ${config.NODE_ENV}`)
 })
 
-module.exports = { app, server, io }
+module.exports = { app, server }
